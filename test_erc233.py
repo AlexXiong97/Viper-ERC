@@ -19,7 +19,7 @@ class TestERC20(unittest.TestCase):
         self.s = self.t.Chain()
         from viper import compiler
         self.t.languages['viper'] = compiler.Compiler()
-        self.c = self.s.contract(open('erc223.v.py').read(),args =['VitalikToken'] ,language='viper')
+        self.c = self.s.contract(open('erc223.v.py').read(),args =['VitalikToken','VTK'] ,language='viper')
 
     def test_initial_state(self):
         print("testing inital state:")
@@ -29,6 +29,10 @@ class TestERC20(unittest.TestCase):
         tokenName = str(utils.to_string(self.c.name()),'utf-8')
         print(tokenName)
         self.assertTrue(len(tokenName) > 0)
+        # Check the token symbol is initialized
+        tokenSymbol = str(utils.to_string(self.c.symbol()),'utf-8')
+        print(tokenSymbol)
+        self.assertTrue(len(tokenSymbol) > 0)
         # Check several account balances as 0
         self.assertEqual(self.c.balanceOf(self.t.a1), 0)
         self.assertEqual(self.c.balanceOf(self.t.a2), 0)

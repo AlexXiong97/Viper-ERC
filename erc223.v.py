@@ -26,12 +26,14 @@ balances: num256[address]
 allowances: (num256[address])[address]
 num_issued: num256
 token_name: bytes32
+token_symbol: bytes32
 
 # Setup global variables
-def __init__(_token_name: bytes32):
+def __init__(_token_name: bytes32, _token_symbol: bytes32):
     self.payable(false, msg.value)
     self.num_issued = as_num256(0)
     self.token_name = _token_name
+    self.token_symbol = _token_symbol
 
 def deposit() -> bool:
     self.payable(true, msg.value)
@@ -60,6 +62,9 @@ def totalSupply() -> num256(const):
 
 def name() -> bytes32(const):
     return self.token_name
+
+def symbol() -> bytes32(const):
+    return self.token_symbol
 
 def balanceOf(_owner : address) -> num256(const):
     self.payable(false, msg.value)
