@@ -1,0 +1,30 @@
+Environment:
+
+Ubuntu 16.04 LTS. (MacOS works similarly I would imagine)
+
+NOTE:
+# DON'T Panic if Installation/Set-up fails, take a deep breath and follow me.
+
+sudo apt-get update
+sudo apt-get -y upgrade
+python3 -V  => Python 3.5.2
+
+# you need python3.6 or later.
+sudo add-apt-repository ppa:jonathonf/python-3.6
+sudo apt-get update
+
+sudo apt-get install -y python3-pip
+sudo apt-get install build-essential libssl-dev libffi-dev python-dev python3.6-dev python3.6
+
+pip3 install setuptools
+
+#before testing, make sure you have pyethereum clone on branch state_revamp
+git clone https://github.com/ethereum/pyethereum/
+git checkout state_revamp
+python3.6 setup.py install / python setup.py install (both work)
+
+# There is a bug in `viper/tests/test_parser.py`, change `tester2` into `tester`
+
+# Now, we are talking business (python3.6 or later is necessary)
+python3.6 setup.py install
+python3.6 setup.py test

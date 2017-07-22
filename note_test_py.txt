@@ -1,0 +1,15 @@
+NOTE:
+
+88 : self.assertEqual(self.c.allowance(self.t.a1, self.t.a2, sender=self.t.k2), 1)
+88*: self.assertEqual(self.c.allowance(self.t.a2, self.t.a1, sender=self.t.k2), 1)
+
+89 : By line 88, k3 approved k2 1 token, k2 approved k1 1 token, but, only k1 has 1 token
+      therefore, it should return false.
+89*: self.assertFalse(self.c.transferFrom(self.t.a2, self.t.a3, 1, sender=self.t.k2))
+
+92 : Should return false, because k2 once approved k1 1 token, so without resetting it
+      to 0, k2 are not allowed to approve again.
+92*: self.assertFalse(self.c.approve(self.t.a1, 1, sender=self.t.k2))
+
+93 :self.assertEqual(self.c.allowance(self.t.a1, self.t.a2, sender=self.t.k2), 1)
+93*:self.assertEqual(self.c.allowance(self.t.a2, self.t.a1, sender=self.t.k2), 1)
