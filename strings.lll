@@ -49,10 +49,10 @@
 			    	(def '*firstString* 0x40)
 
 			    	;;get length of first string
-			    	(def 'firstStringSize (calldataload 4)
+			    	(def 'firstStringSize (calldataload 4))
 
 			    	;;retrieve first string and store in memory
-			    	(calldatacopy *firstString* (add 4 32) firstStringSize)
+			    	(calldatacopy *firstString* 36 firstStringSize)
 
 			    	;;get length of second string;
 			    	(def 'secondStringSize (calldataload 36))
@@ -63,8 +63,8 @@
 			    	;;retrieve second string and store in memory
 			    	(calldatacopy *secondString* 68 secondStringSize)
 
-			      	;; return the bytes we just stored in memory
-			        (return *firtString* (add firstStringSize secondStringSize)))))
+			      	;; return the bytes we just stored in memory.
+			        (return *firstString*)))
 
 			    ;; --------------------------------------------------------------------------------------------
 			    ;; @notice Fallback: No functions matched the function ID provided.
