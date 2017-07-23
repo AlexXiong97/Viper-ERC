@@ -12,7 +12,7 @@
   	;; Memory layout
   	(def '*scratch* 0x00)
 	(def '*funcid* 0x20)
-	(def '*returnString* 0x40)
+
 
 	;; Precomputed function IDs.
 	(def 'concat 0x5f3376f3) ; concat(bytes,bytes)
@@ -60,12 +60,26 @@
 			(function concat
 			    (seq
 
-			    	;; takes the call data, excluding the function identifier, and stores it in memory
-			        (def 'stringTotalSize (sub (calldatasize) 4))
-			        (calldatacopy *returnString* 0x04 stringTotalSize)
+			    	;;allocate memory for first string
+			    	(def '*firstString* 0x40)
+
+			    	;;get length of first string
+			    	(def 'firstStringSize (calldataload(4))
+
+			    	;;retrieve first string and store in memory
+			    	(calldatacopy *firstString* (add 4 32) firstStringSize)
+
+			    	;;get length of second string;
+			    	(def 'secondStringSize (calldataload(36)))
+
+			    	;;allocate memory for second string
+			    	(def '*secondString* (add 0x40 firstStringSize)) 
+
+			    	;;retrieve second string and store in memory
+			    	(calldatacopy *secondString* 68 secondStringSize)
 
 			      	;; return the bytes we just stored in memory
-			        (return *returnString* stringTotalSize)))
+			        (return *firtString* (add firstStringSize secondStringSize)))))
 
 			    ;; --------------------------------------------------------------------------------------------
 			    ;; @notice Fallback: No functions matched the function ID provided.
