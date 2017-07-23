@@ -1,0 +1,61 @@
+;;; --------------------------------------------------------------------------
+;;; Implementation of Nick Johnson's String Utility functions in LLL
+;;;
+;;; George Lambeth - glambeth1594@gmail.com
+
+(seq
+	;; ----------------------------------------------------------------------
+	;; CONSTANTS
+	(def 'false 0)
+  	(def 'true  1)
+
+  	;; Memory layout
+  	(def '*scratch* 0x00)
+	(def '*funcid* 0x20)
+	(def '*_strlen* 0x40)
+	(def '*_strptr* 0x60)
+
+	;; Precomputed function IDs.
+	(def 'memcpy 0x06fdde03) ; memcpy(uint,uint,uint)
+
+	;; Gets the function ID and stores it in memory for reference.
+  	(def 'get-function-id
+		(mstore *funcid* (shift-right (calldataload 0x00))))
+
+	;; Shifts the leftmost 4 bytes of a 32-byte number right by 28 bytes.
+ 	(def 'shift-right (input)
+		(div input (exp 2 224)))
+
+	;; Takes a function hash and a sequence of code, compares that hash to the
+ 	;; hash supplied by the caller (which has been stored in *funcid*), and
+	;; executes the given code if they match.
+	(def 'function (function-hash code-body)
+    	(when (= (mload *funcid*) function-hash)
+			code-body))
+
+
+	;;; ----------------------------------------------------------------------
+	;;; CODE
+
+	(returnlll
+		(seq
+			get-function-id
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		)))
