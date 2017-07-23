@@ -118,6 +118,8 @@ class TestERC20(unittest.TestCase):
         assert_tx_failed(self, lambda :self.c.is_overflow_add(0, 0, value=2, sender=self.t.k1))
         assert_tx_failed(self, lambda :self.c.is_overflow_sub(0, 0, value=2, sender=self.t.k1))
 
+    # def test_contractAddressClassifer(self):
+        # self.assertTrue(self.c.is_contract_address(self.c.address))
 
 if __name__ == '__main__':
     unittest.main()

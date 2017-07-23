@@ -2,7 +2,7 @@
 
 import unittest
 from ethereum.tools import tester
-from ethereum import utils
+from ethereum import utils, opcodes
 
 def assert_tx_failed(erc20_tester, function_to_test):
     """ Ensure that transaction fails, reverting state (to prevent gas exhaustion) """
@@ -11,15 +11,14 @@ def assert_tx_failed(erc20_tester, function_to_test):
     erc20_tester.s.revert(initial_state)
 
 
-class TestERC20(unittest.TestCase):
+class TestERC223(unittest.TestCase):
     def setUp(self):
-        print("testing set-up, and initialization")
         # Initialize tester, contract and expose relevant objects
         self.t = tester
         self.s = self.t.Chain()
         from viper import compiler
         self.t.languages['viper'] = compiler.Compiler()
-        self.c = self.s.contract(open('erc223.v.py').read(),args =['VitalikToken','VTK'] ,language='viper')
+        self.c = self.s.contract(open('erc223.v.py').read(),args=['VitalikToken','VTK'] ,language='viper')
 
     def test_initial_state(self):
         print("testing inital state:")
@@ -103,6 +102,8 @@ class TestERC20(unittest.TestCase):
         self.assertFalse(self.c.approve(self.t.a1, 1, sender=self.t.k2))
         self.assertEqual(self.c.allowance(self.t.a2, self.t.a1, sender=self.t.k2), 1)
         self.assertFalse(self.c.transferFrom(self.t.a1, self.t.a2, 1, sender=self.t.k3))
+
+    # def test_contractAddressClassifer(self):
 
 
     def test_payability(self):

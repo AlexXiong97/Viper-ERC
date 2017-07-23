@@ -27,20 +27,18 @@ allowances: (num256[address])[address]
 num_issued: num256
 token_name: bytes32
 token_symbol: bytes32
-tokenFallback_sig: bytes <= 4
-# token_decimals: num
+token_decimals: int128
 
 
 # Setup global variables
-def __init__ (_token_name: bytes32, _token_symbol: bytes32):
+def __init__(_token_name: bytes32, _token_symbol: bytes32, _token_decimals: int128):
     self.payable(false, msg.value)
     self.num_issued = as_num256(0)
     self.token_name = _token_name
     self.token_symbol = _token_symbol
-    # self.tokenFallback_sig = [\xc0,\xee,\x0b,\x8a]
     # decimal digits no more than 10
-    # assert (_token_decimals > 10)
-    # self.token_decimals = _token_decimals
+    assert (_token_decimals > 10)
+    self.token_decimals = _token_decimals
 
 def deposit() -> bool:
     self.payable(true, msg.value)
@@ -68,30 +66,14 @@ def totalSupply() -> num256(const):
     return self.num_issued
 
 def name() -> bytes32(const):
-    self.payable(false, msg.value)
     return self.token_name
 
 def symbol() -> bytes32(const):
-    self.payable(false, msg.value)
     return self.token_symbol
 
 def balanceOf(_owner : address) -> num256(const):
     self.payable(false, msg.value)
     return self.balances[_owner]
-
-def transferNew(_to: address, _value: num256, _data: bytes <= 4096) -> bool:
-    self.payable(false, msg.value)
-    if self.is_overflow_add(self.balances[_to], _value):
-        return false
-    if self.is_overflow_sub(self.balances[msg.sender], _value):
-        return false
-    self.balances[msg.sender] = num256_sub(self.balances[msg.sender], _value)
-    self.balances[_to] = num256_add(self.balances[_to], _value)
-    if _to is a contract, then do the following:
-    if (is_contract_address(_to) and _slice(_data, start=as_num(0), len=as_num(4)) == tokenFallback_sig):
-        raw_call(_to, _data, gas=300000, outsize = 0, value= _slice(_data, start=as_num(4), len=as_num(_len(_data))-4))
-    return true
-
 
 def transfer(_to : address, _value : num256) -> bool:
     self.payable(false, msg.value)
@@ -144,8 +126,3 @@ def is_overflow_sub(a : num256, b : num256) -> bool:
 def payable(payable : bool, value : wei_value):
     if ((not payable) and (value > 0)):
         assert(false)
-
-def is_contract_address(_address: address) -> bool:
-    if ( ~EXTCODESIZE(_address) > 0):
-        return true
-    return false
