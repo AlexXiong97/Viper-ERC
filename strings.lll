@@ -1,10 +1,10 @@
-;;; --------------------------------------------------------------------------
+;;; --------------------------------------------------------------------------------------------------------
 ;;; Implementation of Nick Johnson's String Utility functions in LLL
 ;;;
 ;;; George Lambeth - glambeth1594@gmail.com
 
 (seq
-	;; ----------------------------------------------------------------------
+	;; -----------------------------------------------------------------------------------------------------
 	;; CONSTANTS
 	(def 'false 0)
   	(def 'true  1)
@@ -12,15 +12,25 @@
   	;; Memory layout
   	(def '*scratch* 0x00)
 	(def '*funcid* 0x20)
-	(def '*_strlen* 0x40)
-	(def '*_strptr* 0x60)
+	(def '*returnString* 0x40)
 
 	;; Precomputed function IDs.
-	(def 'memcpy 0x06fdde03) ; memcpy(uint,uint,uint)
+	(def 'concat 0x5f3376f3) ; concat(bytes,bytes)
+
+	;; Convenience macros to refer to function arguments
+	(def 'arg1 (calldataload 0x04))
+	(def 'arg2 (calldataload 0x24))
+
 
 	;; Gets the function ID and stores it in memory for reference.
   	(def 'get-function-id
 		(mstore *funcid* (shift-right (calldataload 0x00))))
+
+	(def 'return-string (string-literal)
+    	(seq
+    		(mstore 0x00 0x20)           ; Points to our string's memory location
+    		(mstore 0x20 string-literal) ; Length. String itself is copied to 0x40.
+    		(return 0x00 (& (+ (mload 0x20) 0x5f) (~ 0x1f))))) ; Round return up to 32 byte boundary
 
 	;; Shifts the leftmost 4 bytes of a 32-byte number right by 28 bytes.
  	(def 'shift-right (input)
@@ -34,28 +44,30 @@
 			code-body))
 
 
-	;;; ----------------------------------------------------------------------
+	;;; ------------------------------------------------------------------------------------------------------
 	;;; CODE
 
 	(returnlll
 		(seq
 			get-function-id
 
-			
 
+			;; -----------------------------------------------------------------------------------------------
+			;; @notice concatenates the strings passed in
+			;; @dev Signature: concat(bytes,bytees)
+			;; @return The concatenated strings. TODO: remove the extra 0 bytes that are padded
 
+			(function concat
+			    (seq
 
+			    	;; takes the call data, excluding the function identifier, and stores it in memory
+			        (def 'stringTotalSize (sub (calldatasize) 4))
+			        (calldatacopy *returnString* 0x04 stringTotalSize)
 
+			      	;; return the bytes we just stored in memory
+			        (return *returnString* stringTotalSize)))
 
+			    ;; --------------------------------------------------------------------------------------------
+			    ;; @notice Fallback: No functions matched the function ID provided.
 
-
-
-
-
-
-
-
-
-
-
-		)))
+				(panic))))
