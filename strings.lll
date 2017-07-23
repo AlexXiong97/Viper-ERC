@@ -5,36 +5,21 @@
 
 (seq
 	;; -----------------------------------------------------------------------------------------------------
-	;; CONSTANTS
-	(def 'false 0)
-  	(def 'true  1)
 
   	;; Memory layout
   	(def '*scratch* 0x00)
 	(def '*funcid* 0x20)
 
-
 	;; Precomputed function IDs.
 	(def 'concat 0x5f3376f3) ; concat(bytes,bytes)
-
-	;; Convenience macros to refer to function arguments
-	(def 'arg1 (calldataload 0x04))
-	(def 'arg2 (calldataload 0x24))
-
-
-	;; Gets the function ID and stores it in memory for reference.
-  	(def 'get-function-id
-		(mstore *funcid* (shift-right (calldataload 0x00))))
-
-	(def 'return-string (string-literal)
-    	(seq
-    		(mstore 0x00 0x20)           ; Points to our string's memory location
-    		(mstore 0x20 string-literal) ; Length. String itself is copied to 0x40.
-    		(return 0x00 (& (+ (mload 0x20) 0x5f) (~ 0x1f))))) ; Round return up to 32 byte boundary
 
 	;; Shifts the leftmost 4 bytes of a 32-byte number right by 28 bytes.
  	(def 'shift-right (input)
 		(div input (exp 2 224)))
+
+	;; Gets the function ID and stores it in memory for reference.
+  	(def 'get-function-id
+		(mstore *funcid* (shift-right (calldataload 0x00))))
 
 	;; Takes a function hash and a sequence of code, compares that hash to the
  	;; hash supplied by the caller (which has been stored in *funcid*), and
@@ -64,13 +49,13 @@
 			    	(def '*firstString* 0x40)
 
 			    	;;get length of first string
-			    	(def 'firstStringSize (calldataload(4))
+			    	(def 'firstStringSize (calldataload 4)
 
 			    	;;retrieve first string and store in memory
 			    	(calldatacopy *firstString* (add 4 32) firstStringSize)
 
 			    	;;get length of second string;
-			    	(def 'secondStringSize (calldataload(36)))
+			    	(def 'secondStringSize (calldataload 36))
 
 			    	;;allocate memory for second string
 			    	(def '*secondString* (add 0x40 firstStringSize)) 
