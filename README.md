@@ -11,12 +11,11 @@ It is **strongly recommended** to install in **a virtual Python environment (nor
 To find out how to set-up virtual environment, check out: [virtualenv guide](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/)
 
 
-- Ubuntu (16.04 LTS)
+- **Ubuntu (16.04 LTS)**
 1. Package update:
 ```
 sudo apt-get update 
 sudo apt-get -y upgrade
-
 ```
 
 2. For Viper to run, Python3.6 or later is required, know your python version, if the output is `Python 3.5.2`, then install python3.6, otherwise skip step 3
@@ -39,6 +38,7 @@ sudo apt-get install build-essential libssl-dev libffi-dev python-dev python3.6-
 ```
 git clone https://github.com/ethereum/pyethereum/
 git checkout state_revamp
+cd pyethereum 
 python3.6 setup.py install (or: python setup.py install (both work)
 ```
 
@@ -54,8 +54,31 @@ python3.6 setup.py test
 ```
 change `tester2` into `tester`
 ```
-MacOS
+- **MacOS**
 
+1. Make sure you have homebrew installed. if not, you could checkout [How-To-Geek Guide](https://www.howtogeek.com/211541/homebrew-for-os-x-easily-installs-desktop-apps-and-terminal-utilities/) or [Homebrew Repo](https://github.com/Homebrew/brew/blob/master/docs/Installation.md)
+
+2. Make sure your python is 3.6 or higher. If not, you could checkout [python3 for MacOS guide](http://python-guide-pt-br.readthedocs.io/en/latest/starting/install3/osx/)
+
+3. Before testing, make sure you already have pyethereum cloned on branch state_revamp
+```
+git clone https://github.com/ethereum/pyethereum/
+git checkout state_revamp
+cd pyethereum 
+python setup.py install
+```
+  If it fails with some error message on `openssl`, do the following:
+```
+env LDFLAGS=“-L$(brew --prefix openssl)/lib” CFLAGS=“-I$(brew --prefix openssl)/include” pip install scrypt
+```
+
+4. Now, go ahead and clone viper repo (not within `pyethereum` folder), and you run install and test, and Walla !! 
+```
+git clone https://github.com/ethereum/viper.git
+cd viper 
+python setup.py install
+python setup.py test
+```
 
 # Compile 
 To compile your file, use:
